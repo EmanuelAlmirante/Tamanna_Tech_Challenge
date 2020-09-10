@@ -13,6 +13,7 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
 - Java 11
 - Spring Boot
 - Hibernate
+- Swagger
 - H2 Database (in-memory)
 - JUnit
 - Mockito
@@ -44,6 +45,8 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
   
   
 ### Endpoints:
+
+The documentation of this API can be found at _http://localhost:8080/swagger-ui.html/_ (Note: you need to initialize the application to access this link).
 
 Below are documented the endpoints of the API of this project. There are also some examples of possible outcomes that might happen when using the API. 
 
