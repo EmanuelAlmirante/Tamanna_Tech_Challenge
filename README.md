@@ -20,7 +20,7 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
 
 ### Setup:
 
-- Clone project to a folder
+- Clone project to a folder (git clone https://github.com/EmanuelAlmirante/Tamanna_Tech_Challenge.git or 
 - Run the application with:
   - _mvn clean install_
   - _mvn spring-boot:run_
