@@ -1,4 +1,4 @@
-package app.repository;
+package app.repository.interviewer;
 
 import org.springframework.stereotype.Repository;
 
