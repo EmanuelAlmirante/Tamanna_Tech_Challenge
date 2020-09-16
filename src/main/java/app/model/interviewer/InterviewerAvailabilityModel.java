@@ -1,4 +1,4 @@
-package app.model.candidate;
+package app.model.interviewer;
 
 import app.model.AvailabilitySlot;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,26 +8,26 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "candidate_availability")
-public class CandidateAvailabilityModel {
+@Table(name = "interviewer_availability")
+public class InterviewerAvailabilityModel {
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JsonProperty("candidateName")
+    @JsonProperty("interviewerName")
     @JoinColumn(name = "name", nullable = false)
-    private CandidateModel candidateModel;
+    private InterviewerModel interviewerModel;
 
     @NotNull
     @ElementCollection
     private List<AvailabilitySlot> availabilitySlotList;
 
-    public CandidateAvailabilityModel() {
+    public InterviewerAvailabilityModel() {
     }
 
-    public CandidateAvailabilityModel(Builder builder) {
-        this.candidateModel = builder.candidateModel;
+    public InterviewerAvailabilityModel(Builder builder) {
+        this.interviewerModel = builder.interviewerModel;
         this.availabilitySlotList = builder.availabilitySlotList;
     }
 
@@ -35,8 +35,8 @@ public class CandidateAvailabilityModel {
         return id;
     }
 
-    public CandidateModel getCandidateModel() {
-        return candidateModel;
+    public InterviewerModel getInterviewerModel() {
+        return interviewerModel;
     }
 
     public List<AvailabilitySlot> getAvailabilitySlotList() {
@@ -44,15 +44,15 @@ public class CandidateAvailabilityModel {
     }
 
     public static class Builder {
-        private CandidateModel candidateModel;
+        private InterviewerModel interviewerModel;
         private List<AvailabilitySlot> availabilitySlotList;
 
-        public static Builder candidateAvailabilityModelWith() {
+        public static Builder interviewerAvailabilityModelWith() {
             return new Builder();
         }
 
-        public Builder withCandidateModel(CandidateModel candidateModel) {
-            this.candidateModel = candidateModel;
+        public Builder withInterviewerModel(InterviewerModel interviewerModel) {
+            this.interviewerModel = interviewerModel;
 
             return this;
         }
@@ -63,8 +63,8 @@ public class CandidateAvailabilityModel {
             return this;
         }
 
-        public CandidateAvailabilityModel build() {
-            return new CandidateAvailabilityModel(this);
+        public InterviewerAvailabilityModel build() {
+            return new InterviewerAvailabilityModel(this);
         }
     }
 }

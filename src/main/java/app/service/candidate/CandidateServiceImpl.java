@@ -9,6 +9,7 @@ import app.repository.candidate.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,6 @@ import java.util.Optional;
 public class CandidateServiceImpl implements CandidateService {
     private final CandidateRepository candidateRepository;
     private final CandidateAvailabilityRepository candidateAvailabilityRepository;
-
 
     @Autowired
     public CandidateServiceImpl(CandidateRepository candidateRepository,
@@ -52,13 +52,13 @@ public class CandidateServiceImpl implements CandidateService {
             CandidateAvailabilityModel candidateAvailabilityModel) {
         verifyValidityOfCandidateAvailability(candidateAvailabilityModel);
 
-        CandidateAvailabilityModel candidateExistingAvailabilityModel = verifyIfCandidateHasAvailabilityCreated(
+        CandidateAvailabilityModel candidateExistingAvailability = verifyIfCandidateHasAvailabilityCreated(
                 candidateAvailabilityModel);
 
-        if (candidateExistingAvailabilityModel != null) {
-            addNewAvailability(candidateExistingAvailabilityModel, candidateAvailabilityModel);
+        if (candidateExistingAvailability != null) {
+            addNewAvailability(candidateExistingAvailability, candidateAvailabilityModel);
 
-            return candidateAvailabilityRepository.save(candidateExistingAvailabilityModel);
+            return candidateAvailabilityRepository.save(candidateExistingAvailability);
         }
 
         return candidateAvailabilityRepository.save(candidateAvailabilityModel);
@@ -74,22 +74,33 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(name);
     }
 
+    @Override
+    public void deleteCandidateAvailabilityByName(String name) {
+        Long candidateAvailabilityIdToBeDeleted =
+                candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(name).getId();
+
+        candidateAvailabilityRepository.deleteById(candidateAvailabilityIdToBeDeleted);
+    }
+
     private void verifyValidityOfCandidate(CandidateModel candidateModel) {
         verifyNameIsFilled(candidateModel);
         verifyUniqueName(candidateModel);
     }
 
     private void verifyNameIsFilled(CandidateModel candidateModel) {
-        if (candidateModel.getName() == null || candidateModel.getName().isBlank()) {
+        String nameOfCandidateToBeCreated = candidateModel.getName();
+
+        if (nameOfCandidateToBeCreated == null || nameOfCandidateToBeCreated.isBlank()) {
             throw new BusinessException("You must provide a name!",
                                         candidateModel.getName() != null ? candidateModel.getName() : null);
         }
     }
 
     private void verifyUniqueName(CandidateModel candidateModel) {
+        String nameOfCandidateToBeCreated = candidateModel.getName();
         List<String> existingNames = candidateRepository.getAllNames();
 
-        if (existingNames.contains(candidateModel.getName())) {
+        if (existingNames.contains(nameOfCandidateToBeCreated)) {
             throw new BusinessException("Name already exists!", candidateModel.getName());
         }
     }
@@ -110,20 +121,25 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     private void verifyPeriodOfAvailabilityIsValid(CandidateAvailabilityModel candidateAvailabilityModel) {
-        List<AvailabilitySlot> availabilitySlotList = candidateAvailabilityModel.getAvailabilitySlot();
+        List<AvailabilitySlot> availabilitySlotList = candidateAvailabilityModel.getAvailabilitySlotList();
 
         for (AvailabilitySlot availabilitySlot : availabilitySlotList) {
-            if (availabilitySlot.getFrom().isAfter(availabilitySlot.getTo()) || availabilitySlot.getFrom().isEqual(
-                    availabilitySlot.getTo())) {
+            LocalDateTime newAvailabilitySlotFromDateTime = availabilitySlot.getFrom();
+            LocalDateTime newAvailabilitySlotToDateTime = availabilitySlot.getTo();
+
+            if (newAvailabilitySlotFromDateTime.isAfter(newAvailabilitySlotToDateTime)
+                || newAvailabilitySlotFromDateTime
+                        .isEqual(newAvailabilitySlotToDateTime)) {
                 throw new BusinessException("Start hour of slot must be before end hour of slot!",
-                                            "From: " + availabilitySlot.getFrom(), "To: " + availabilitySlot.getTo());
+                                            "From: " + newAvailabilitySlotFromDateTime,
+                                            "To: " + newAvailabilitySlotToDateTime);
             }
 
-            if (availabilitySlot.getFrom().getMinute() != 0 || availabilitySlot.getTo().getMinute() != 0) {
+            if (newAvailabilitySlotFromDateTime.getMinute() != 0 || newAvailabilitySlotToDateTime.getMinute() != 0) {
                 throw new BusinessException(
                         "Availability slot must be from the beginning of the hour until the beginning of the next "
                         + "hour.",
-                        "From: " + availabilitySlot.getFrom(), "To: " + availabilitySlot.getTo());
+                        "From: " + newAvailabilitySlotFromDateTime, "To: " + newAvailabilitySlotToDateTime);
             }
         }
     }
@@ -136,7 +152,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     private void addNewAvailability(CandidateAvailabilityModel candidateExistingAvailabilityModel,
                                     CandidateAvailabilityModel candidateAvailabilityModel) {
-        candidateExistingAvailabilityModel.getAvailabilitySlot().addAll(
-                candidateAvailabilityModel.getAvailabilitySlot());
+        candidateExistingAvailabilityModel.getAvailabilitySlotList().addAll(
+                candidateAvailabilityModel.getAvailabilitySlotList());
     }
 }

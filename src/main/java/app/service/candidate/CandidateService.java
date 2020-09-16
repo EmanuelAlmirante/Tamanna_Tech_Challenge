@@ -20,4 +20,6 @@ public interface CandidateService {
     List<CandidateAvailabilityModel> getAllCandidatesAvailability();
 
     CandidateAvailabilityModel getCandidateAvailabilityByName(String name);
+
+    void deleteCandidateAvailabilityByName(String name);
 }

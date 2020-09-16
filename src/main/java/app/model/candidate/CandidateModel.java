@@ -3,8 +3,7 @@ package app.model.candidate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Set;
-
+import java.util.List;
 
 @Entity
 @Table(name = "candidate")
@@ -14,7 +13,7 @@ public class CandidateModel {
 
     @JsonIgnore
     @OneToMany(mappedBy = "candidateModel", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private Set<CandidateAvailabilityModel> candidateAvailabilityModelSet;
+    private List<CandidateAvailabilityModel> candidateAvailabilityModelList;
 
     public CandidateModel() {
     }
@@ -25,20 +24,20 @@ public class CandidateModel {
 
     public CandidateModel(Builder builder) {
         this.name = builder.name;
-        this.candidateAvailabilityModelSet = builder.candidateAvailabilityModelSet;
+        this.candidateAvailabilityModelList = builder.candidateAvailabilityModelList;
     }
 
     public String getName() {
         return name;
     }
 
-    public Set<CandidateAvailabilityModel> getCandidateAvailabilityModelSet() {
-        return candidateAvailabilityModelSet;
+    public List<CandidateAvailabilityModel> getCandidateAvailabilityModelList() {
+        return candidateAvailabilityModelList;
     }
 
     public static class Builder {
         private String name;
-        private Set<CandidateAvailabilityModel> candidateAvailabilityModelSet;
+        private List<CandidateAvailabilityModel> candidateAvailabilityModelList;
 
         public static Builder candidateModelWith() {
             return new Builder();
@@ -50,9 +49,9 @@ public class CandidateModel {
             return this;
         }
 
-        public Builder withCandidateAvailabilityModelSet(
-                Set<CandidateAvailabilityModel> candidateAvailabilityModelSet) {
-            this.candidateAvailabilityModelSet = candidateAvailabilityModelSet;
+        public Builder withCandidateAvailabilityModelList(
+                List<CandidateAvailabilityModel> candidateAvailabilityModelList) {
+            this.candidateAvailabilityModelList = candidateAvailabilityModelList;
 
             return this;
         }

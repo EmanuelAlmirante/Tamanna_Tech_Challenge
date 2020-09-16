@@ -59,4 +59,10 @@ public class CandidateController {
     public CandidateAvailabilityModel getCandidateAvailabilityByName(@PathVariable String name) {
         return candidateService.getCandidateAvailabilityByName(name);
     }
+
+    @DeleteMapping("/availability/{name}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCandidateAvailabilityByName(@PathVariable String name) {
+        candidateService.deleteCandidateAvailabilityByName(name);
+    }
 }

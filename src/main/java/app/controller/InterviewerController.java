@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.model.interviewer.InterviewerAvailabilityModel;
 import app.model.interviewer.InterviewerModel;
 import app.service.interviewer.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,30 @@ public class InterviewerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInterviewerById(@PathVariable String name) {
         interviewerService.deleteInterviewerByName(name);
+    }
+
+    @PostMapping("/availability")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InterviewerAvailabilityModel createInterviewerAvailability(
+            @Valid @RequestBody InterviewerAvailabilityModel interviewerAvailabilityModel) {
+        return interviewerService.createInterviewerAvailability(interviewerAvailabilityModel);
+    }
+
+    @GetMapping("/availability")
+    @ResponseStatus(HttpStatus.OK)
+    public List<InterviewerAvailabilityModel> getAllInterviewersAvailability() {
+        return interviewerService.getAllInterviewersAvailability();
+    }
+
+    @GetMapping("/availability/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public InterviewerAvailabilityModel getCandidateAvailabilityByName(@PathVariable String name) {
+        return interviewerService.getInterviewerAvailabilityByName(name);
+    }
+
+    @DeleteMapping("/availability/{name}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteInterviewerAvailabilityByName(@PathVariable String name) {
+        interviewerService.deleteInterviewerAvailabilityByName(name);
     }
 }
