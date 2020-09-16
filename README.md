@@ -38,7 +38,6 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
   - Launch Docker
   - Run the command _sudo systemctl status docker_ to confirm Docker is running
   - Open terminal in the project folder
-  - Run the command _mvn clean install_
   - Run the command _sudo docker build -t [NAME_OF_IMAGE] ._ to create the Docker image. Replace _NAME_OF_IMAGE_ with a name for that image like, for example, _uphill-solution_
   - Run the command _sudo docker run -p 8080:8080 [NAME_OF_IMAGE]_ to launch the application
   - Test using Postman
@@ -52,7 +51,7 @@ Below are documented the endpoints of the API of this project. There are also so
 
 For testing the API use Postman and the file in the _postman_collections_ folder. 
 
-### Code Quality Requirements
+### Code Quality Requirements (remove)
 
 All delivered code must adhere to Clean Code principle. Code is clean if it can be understood easily by everyone on the team. Clean code can be read and enhanced by a developer other than its original author. With understandability comes readability, changeability, extensibility and maintainability.
 
