@@ -64,6 +64,16 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateAvailabilityRepository.save(candidateAvailabilityModel);
     }
 
+    @Override
+    public List<CandidateAvailabilityModel> getAllCandidatesAvailability() {
+        return candidateAvailabilityRepository.findAll();
+    }
+
+    @Override
+    public CandidateAvailabilityModel getCandidateAvailabilityByName(String name) {
+        return candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(name);
+    }
+
     private void verifyValidityOfCandidate(CandidateModel candidateModel) {
         verifyNameIsFilled(candidateModel);
         verifyUniqueName(candidateModel);

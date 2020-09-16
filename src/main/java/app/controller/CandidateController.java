@@ -42,9 +42,21 @@ public class CandidateController {
     }
 
     @PostMapping("/availability")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public CandidateAvailabilityModel createCandidateAvailability(
             @Valid @RequestBody CandidateAvailabilityModel candidateAvailabilityModel) {
         return candidateService.createCandidateAvailability(candidateAvailabilityModel);
+    }
+
+    @GetMapping("/availability")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CandidateAvailabilityModel> getAllCandidatesAvailability() {
+        return candidateService.getAllCandidatesAvailability();
+    }
+
+    @GetMapping("/availability/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public CandidateAvailabilityModel getCandidateAvailabilityByName(@PathVariable String name) {
+        return candidateService.getCandidateAvailabilityByName(name);
     }
 }

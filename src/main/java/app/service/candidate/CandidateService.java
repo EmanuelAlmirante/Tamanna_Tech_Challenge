@@ -16,4 +16,8 @@ public interface CandidateService {
     void deleteCandidateByName(String name);
 
     CandidateAvailabilityModel createCandidateAvailability(CandidateAvailabilityModel candidateAvailabilityModel);
+
+    List<CandidateAvailabilityModel> getAllCandidatesAvailability();
+
+    CandidateAvailabilityModel getCandidateAvailabilityByName(String name);
 }
