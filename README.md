@@ -150,6 +150,106 @@ For testing the API use Postman and the file in the _postman_collections_ folder
    Return:
     
       empty
+      
+#### Interviewers:
+
+* Create An Interviewer:
+  
+   **Create an interviewer by providing their name**  
+   
+      POST /tamanna/api/interviewers
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/interviewers
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      {
+    	"name": "Jane Doe"
+      }
+      
+   Return:
+    
+      {
+    	"name": "Jane Doe"
+      }
+
+* Get All Interviewers:
+  
+   **Get a list of all interviewers created**  
+   
+      GET /tamanna/api/interviewers
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/interviewers
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      [
+       {
+        "name": "Jane Doe"
+       } 
+      ]
+      
+* Get An Interviewer:
+  
+   **Get an interviewer by name**  
+   
+      GET /tamanna/api/interviewers/{name}
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/interviewers/Jane Doe
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      {
+    	"name": "Jane Doe"
+      }
+      
+* Delete An Interviewer:
+  
+   **Delete an interviewer by name**  
+   
+      DELETE /tamanna/api/interviewers/{name}
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/interviewers/Jane Doe
+            
+   Response Status:
+      
+      204 NO CONTENT
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      empty
 
 ### Code Quality Requirements
 
