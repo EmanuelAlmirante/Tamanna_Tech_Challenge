@@ -1,6 +1,6 @@
 # Tamanna Tech Challenge
 
-This application is an interview calendar API. It exposes endpoints to create interviewers and candidates and 
+This application is an interview calendar API. 
 
 
 ### Necessary Tools:
@@ -38,7 +38,7 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
   - Launch Docker
   - Run the command _sudo systemctl status docker_ to confirm Docker is running
   - Open terminal in the project folder
-  - Run the command _sudo docker build -t [NAME_OF_IMAGE] ._ to create the Docker image. Replace _NAME_OF_IMAGE_ with a name for that image like, for example, _uphill-solution_
+  - Run the command _sudo docker build -t [NAME_OF_IMAGE] ._ to create the Docker image. Replace _NAME_OF_IMAGE_ with a name for that image like, for example, _tamanna-solution_
   - Run the command _sudo docker run -p 8080:8080 [NAME_OF_IMAGE]_ to launch the application
   - Test using Postman
   
@@ -51,7 +51,61 @@ Below are documented the endpoints of the API of this project. There are also so
 
 For testing the API use Postman and the file in the _postman_collections_ folder. 
 
-### Code Quality Requirements (remove)
+#### Candidates:
+
+* Create Candidate:
+  
+   **Create a candidate by providing their name**  
+   
+      POST /tamanna/api/candidates
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/candidates
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      {
+    	"name": "John Doe"
+      }
+      
+   Return:
+    
+      {
+    	"name": "John Doe1"
+      }
+
+* Get All Candidates:
+  
+   **Get a list of all candidates created**  
+   
+      GET /tamanna/api/candidates
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/candidates
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      [
+       {
+        "name": "John Doe"
+       } 
+      ]
+
+### Code Quality Requirements
 
 All delivered code must adhere to Clean Code principle. Code is clean if it can be understood easily by everyone on the team. Clean code can be read and enhanced by a developer other than its original author. With understandability comes readability, changeability, extensibility and maintainability.
 
@@ -158,101 +212,6 @@ The first thing to consider when implementing/defining tests and test cases is t
 • Manual tests
 
 We need to define test scenarios and/or objectives in order to decide how are we going to test it; Depending on each scenario, we may need to choose a different approach.
-
-#### Manual vs Automated Tests
-
-When deciding between manual and automated tests, we need to consider the following:
- 
-- How much time are willing to spend with the test runs?
-
-Manual testing is more time-consuming, since it is performed by human resources;
-
-On the other hand, automatic tests take less time to run, since a software tool executes the tests (and we can let the tests run overnight);
-
-- If we are going to automate, how much effort will be needed to implement these tests/scripts?
-	
-Some automated tests can take too much time to develop, so maybe we need to find a middle point between the two approaches.
-	
-- How many times are we going to run a specific test?
-
-This is a very important point to consider: tests that need to be run more often are more likely candidates to be automated.
- 
-In short, manual testing is best suited to the following areas/scenarios:
-
-• Exploratory Testing: 
-
-This type of testing requires the tester’s knowledge, experience, analytical/logical skills, creativity, and intuition.
-The test is characterized here by poorly written specification documentation, and/or a short time for execution. We need the human skills to execute the testing process in this scenario.
-
-• Usability Testing: 
-
-This is an area in which we need to measure how user-friendly, efficient, or convenient the software or product is for the end users. Here, human observation is the most important factor, so a manual approach is preferable.
-
-• Ad-hoc Testing: 
-
-In this scenario, there is no specific approach. It is a totally unplanned method of testing where the understanding and insight of the tester is the only important factor.
-
-#### Defining Test Cases
-
-“A TEST CASE is a set of conditions or variables under which a tester will determine whether a system under test satisfies requirements or works correctly”.
-
-In other words, a test case is a single executable test which a tester carries out. It guides them through the steps of the test. You can think of a test case as a set of step-by-step instructions to verify something behaves as it is required to behave.
-
-The process of developing test cases can also help find problems in the requirements or design of an application.
-
-Test cases definition can begin at the same time as the development.
-
-A test case usually contains, but is not limited to:
-
-• Title
-
-• Description
-
-• Test steps
-
-• Expected result
-
-• Actual result (once tested)
-
-This can be done using a test document (i.e., xlsx) or a test management tool.
-
-#### Types of Tests
-
-After defining the test cases, we can decide in which kind of testing we’ll use.
-
-Test cases that will be automated will likely fall in one of these categories:
-
-- Unit tests:
-
-The goal of Unit Testing is to isolate each part of the program and show that the individual parts are correct.
-
-Due to the modular nature of the unit testing, we can test parts of the project without waiting for others to be completed.
-
-May require the use of stubs/mocks.
-
-- Integration Tests:
-
-In Integration Testing, individual software modules are integrated logically and tested as a group.
-
-A typical software project consists of multiple software modules, coded by different programmers.
-
-Integration Testing focuses on checking data communication amongst these modules.
-
-These broader tests are used to test the app's infrastructure and whole framework, often including the following components:
-
-Database, File system, Request-response pipeline
-
-- System Tests:
-
-Testing the fully integrated applications including external peripherals in order to check how components interact with one another and with the system as a whole. This is also called End to End testing scenario. GUI testing falls in this kind of tests.
-
-- Another type of test that we need to take into account is Regression Testing:
-
-Regression Testing is defined as a type of software testing to confirm that a recent program or code change has not adversely affected existing features.
-
-Regression Testing is nothing but full or partial selection of already executed test caseswhich are re-executed to ensure existing functionalities work fine.
-
-This testing is done to make sure that new code changes should not have side effects on the existing functionalities. It ensures that old code still works once the new code changes are done.
 
 #### Best Practices
 
