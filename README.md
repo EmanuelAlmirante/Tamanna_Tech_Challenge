@@ -53,7 +53,7 @@ For testing the API use Postman and the file in the _postman_collections_ folder
 
 #### Candidates:
 
-* Create Candidate:
+* Create A Candidate:
   
    **Create a candidate by providing their name**  
    
@@ -76,7 +76,7 @@ For testing the API use Postman and the file in the _postman_collections_ folder
    Return:
     
       {
-    	"name": "John Doe1"
+    	"name": "John Doe"
       }
 
 * Get All Candidates:
@@ -104,6 +104,52 @@ For testing the API use Postman and the file in the _postman_collections_ folder
         "name": "John Doe"
        } 
       ]
+      
+* Get A Candidate:
+  
+   **Get a candidate by name**  
+   
+      GET /tamanna/api/candidates/{name}
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/candidates/John Doe
+            
+   Response Status:
+      
+      200 OK
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      {
+    	"name": "John Doe"
+      }
+      
+* Delete A Candidate:
+  
+   **Delete a candidate by name**  
+   
+      DELETE /tamanna/api/candidates/{name}
+   
+   URL:
+    
+      http://localhost:8080/tamanna/api/candidates/John Doe
+            
+   Response Status:
+      
+      204 NO CONTENT
+      
+   Body:
+      
+      empty
+      
+   Return:
+    
+      empty
 
 ### Code Quality Requirements
 
