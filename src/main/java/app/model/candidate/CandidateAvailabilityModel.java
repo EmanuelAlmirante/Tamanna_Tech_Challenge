@@ -14,13 +14,14 @@ public class CandidateAvailabilityModel {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JsonProperty("candidateName")
     @JoinColumn(name = "name", nullable = false)
     private CandidateModel candidateModel;
 
     @NotNull
     @ElementCollection
+    @Column(length = Integer.MAX_VALUE)
     private List<AvailabilitySlot> availabilitySlotList;
 
     public CandidateAvailabilityModel() {

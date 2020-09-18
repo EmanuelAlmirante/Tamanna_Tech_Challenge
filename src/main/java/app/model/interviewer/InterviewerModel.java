@@ -3,7 +3,6 @@ package app.model.interviewer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "interviewer")
@@ -12,8 +11,8 @@ public class InterviewerModel {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "interviewerModel", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<InterviewerAvailabilityModel> interviewerAvailabilityModelList;
+    @OneToOne(mappedBy = "interviewerModel", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private InterviewerAvailabilityModel interviewerAvailabilityModel;
 
     public InterviewerModel() {
     }
@@ -24,20 +23,20 @@ public class InterviewerModel {
 
     public InterviewerModel(Builder builder) {
         this.name = builder.name;
-        this.interviewerAvailabilityModelList = builder.interviewerAvailabilityModelList;
+        this.interviewerAvailabilityModel = builder.interviewerAvailabilityModel;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<InterviewerAvailabilityModel> getInterviewerAvailabilityModelList() {
-        return interviewerAvailabilityModelList;
+    public InterviewerAvailabilityModel getInterviewerAvailabilityModel() {
+        return interviewerAvailabilityModel;
     }
 
     public static class Builder {
         private String name;
-        private List<InterviewerAvailabilityModel> interviewerAvailabilityModelList;
+        private InterviewerAvailabilityModel interviewerAvailabilityModel;
 
         public static Builder interviewerModelWith() {
             return new Builder();
@@ -49,9 +48,8 @@ public class InterviewerModel {
             return this;
         }
 
-        public Builder withInterviewerAvailabilityModelList(
-                List<InterviewerAvailabilityModel> interviewerAvailabilityModelList) {
-            this.interviewerAvailabilityModelList = interviewerAvailabilityModelList;
+        public Builder withInterviewerAvailabilityModel(InterviewerAvailabilityModel interviewerAvailabilityModel) {
+            this.interviewerAvailabilityModel = interviewerAvailabilityModel;
 
             return this;
         }

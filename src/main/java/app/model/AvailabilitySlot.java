@@ -1,46 +1,47 @@
 package app.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 public class AvailabilitySlot implements Serializable {
-    private final LocalDateTime from;
-    private final LocalDateTime to;
+    private final LocalDate day;
+    private final List<TimeSlot> timeSlotList;
 
-    public AvailabilitySlot(LocalDateTime from, LocalDateTime to) {
-        this.from = from;
-        this.to = to;
+    public AvailabilitySlot(LocalDate day, List<TimeSlot> timeSlotList) {
+        this.day = day;
+        this.timeSlotList = timeSlotList;
     }
 
     public AvailabilitySlot(Builder builder) {
-        this.from = builder.from;
-        this.to = builder.to;
+        this.day = builder.day;
+        this.timeSlotList = builder.timeSlotList;
     }
 
-    public LocalDateTime getFrom() {
-        return from;
+    public LocalDate getDay() {
+        return day;
     }
 
-    public LocalDateTime getTo() {
-        return to;
+    public List<TimeSlot> getTimeSlotList() {
+        return timeSlotList;
     }
 
     public static class Builder {
-        private LocalDateTime from;
-        private LocalDateTime to;
+        private LocalDate day;
+        private List<TimeSlot> timeSlotList;
 
         public static Builder availabilitySlotWith() {
             return new Builder();
         }
 
-        public Builder withFrom(LocalDateTime from) {
-            this.from = from;
+        public Builder withDay(LocalDate day) {
+            this.day = day;
 
             return this;
         }
 
-        public Builder withTo(LocalDateTime to) {
-            this.to = to;
+        public Builder withTimeSlotList(List<TimeSlot> timeSlotList) {
+            this.timeSlotList = timeSlotList;
 
             return this;
         }

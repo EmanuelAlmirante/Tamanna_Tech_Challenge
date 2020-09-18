@@ -3,7 +3,6 @@ package app.model.candidate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "candidate")
@@ -12,8 +11,8 @@ public class CandidateModel {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "candidateModel", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<CandidateAvailabilityModel> candidateAvailabilityModelList;
+    @OneToOne(mappedBy = "candidateModel", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private CandidateAvailabilityModel candidateAvailabilityModel;
 
     public CandidateModel() {
     }
@@ -24,20 +23,20 @@ public class CandidateModel {
 
     public CandidateModel(Builder builder) {
         this.name = builder.name;
-        this.candidateAvailabilityModelList = builder.candidateAvailabilityModelList;
+        this.candidateAvailabilityModel = builder.candidateAvailabilityModel;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<CandidateAvailabilityModel> getCandidateAvailabilityModelList() {
-        return candidateAvailabilityModelList;
+    public CandidateAvailabilityModel getCandidateAvailabilityModel() {
+        return candidateAvailabilityModel;
     }
 
     public static class Builder {
         private String name;
-        private List<CandidateAvailabilityModel> candidateAvailabilityModelList;
+        private CandidateAvailabilityModel candidateAvailabilityModel;
 
         public static Builder candidateModelWith() {
             return new Builder();
@@ -49,9 +48,8 @@ public class CandidateModel {
             return this;
         }
 
-        public Builder withCandidateAvailabilityModelList(
-                List<CandidateAvailabilityModel> candidateAvailabilityModelList) {
-            this.candidateAvailabilityModelList = candidateAvailabilityModelList;
+        public Builder withCandidateAvailabilityModel(CandidateAvailabilityModel candidateAvailabilityModel) {
+            this.candidateAvailabilityModel = candidateAvailabilityModel;
 
             return this;
         }

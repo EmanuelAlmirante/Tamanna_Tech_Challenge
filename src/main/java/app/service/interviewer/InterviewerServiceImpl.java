@@ -2,6 +2,7 @@ package app.service.interviewer;
 
 import app.exception.BusinessException;
 import app.model.AvailabilitySlot;
+import app.model.TimeSlot;
 import app.model.interviewer.InterviewerAvailabilityModel;
 import app.model.interviewer.InterviewerModel;
 import app.repository.interviewer.InterviewerAvailabilityRepository;
@@ -9,7 +10,9 @@ import app.repository.interviewer.InterviewerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,22 +127,24 @@ public class InterviewerServiceImpl implements InterviewerService {
         List<AvailabilitySlot> availabilitySlotList = interviewerAvailabilityModel.getAvailabilitySlotList();
 
         for (AvailabilitySlot availabilitySlot : availabilitySlotList) {
-            LocalDateTime newAvailabilitySlotFromDateTime = availabilitySlot.getFrom();
-            LocalDateTime newAvailabilitySlotToDateTime = availabilitySlot.getTo();
+            List<TimeSlot> timeSlotList = availabilitySlot.getTimeSlotList();
 
-            if (newAvailabilitySlotFromDateTime.isAfter(newAvailabilitySlotToDateTime)
-                || newAvailabilitySlotFromDateTime.isEqual(
-                    newAvailabilitySlotToDateTime)) {
-                throw new BusinessException("Start hour of slot must be before end hour of slot!",
-                                            "From: " + newAvailabilitySlotFromDateTime,
-                                            "To: " + newAvailabilitySlotToDateTime);
-            }
+            for (TimeSlot timeSlot : timeSlotList) {
+                LocalTime newTimeSlotFromTime = timeSlot.getFrom();
+                LocalTime newTimeSlotToTime = timeSlot.getTo();
 
-            if (availabilitySlot.getFrom().getMinute() != 0 || availabilitySlot.getTo().getMinute() != 0) {
-                throw new BusinessException(
-                        "Availability slot must be from the beginning of the hour until the beginning of the next "
-                        + "hour.",
-                        "From: " + newAvailabilitySlotFromDateTime, "To: " + newAvailabilitySlotToDateTime);
+                if (newTimeSlotFromTime.isAfter(newTimeSlotToTime) || newTimeSlotFromTime.equals(newTimeSlotToTime)) {
+                    throw new BusinessException("Start hour of slot must be before end hour of slot!",
+                                                "From: " + newTimeSlotFromTime,
+                                                "To: " + newTimeSlotToTime);
+                }
+
+                if (newTimeSlotFromTime.getMinute() != 0 || newTimeSlotToTime.getMinute() != 0) {
+                    throw new BusinessException(
+                            "Availability slot must be from the beginning of the hour until the beginning of the next "
+                            + "hour.",
+                            "From: " + newTimeSlotFromTime, "To: " + newTimeSlotToTime);
+                }
             }
         }
     }
@@ -152,7 +157,46 @@ public class InterviewerServiceImpl implements InterviewerService {
 
     private void addNewAvailability(InterviewerAvailabilityModel interviewerExistingAvailabilityModel,
                                     InterviewerAvailabilityModel interviewerAvailabilityModel) {
-        interviewerExistingAvailabilityModel.getAvailabilitySlotList().addAll(
-                interviewerAvailabilityModel.getAvailabilitySlotList());
+        List<AvailabilitySlot> existingAvailabilitySlotList =
+                interviewerExistingAvailabilityModel.getAvailabilitySlotList();
+        List<AvailabilitySlot> newAvailabilitySlotList = interviewerAvailabilityModel.getAvailabilitySlotList();
+
+        List<AvailabilitySlot> remainingNewAvailabilitySlotList = addNewAvailabilityToExistingDay(
+                existingAvailabilitySlotList, newAvailabilitySlotList);
+
+        if (!remainingNewAvailabilitySlotList.isEmpty()) {
+            addNewAvailabilityToNewDay(existingAvailabilitySlotList, remainingNewAvailabilitySlotList);
+        }
+    }
+
+    private List<AvailabilitySlot> addNewAvailabilityToExistingDay(
+            List<AvailabilitySlot> existingAvailabilitySlotList, List<AvailabilitySlot> newAvailabilitySlotList) {
+        List<AvailabilitySlot> addedAvailabilitiesToBeRemovedList = new ArrayList<>();
+
+        for (AvailabilitySlot existingAvailabilitySlot : existingAvailabilitySlotList) {
+            List<TimeSlot> existingTimeSlotList = existingAvailabilitySlot.getTimeSlotList();
+            LocalDate existingDay = existingAvailabilitySlot.getDay();
+
+            for (AvailabilitySlot newAvailabilitySlot : newAvailabilitySlotList) {
+                List<TimeSlot> newTimeSlotList = newAvailabilitySlot.getTimeSlotList();
+                LocalDate newDay = newAvailabilitySlot.getDay();
+
+                if (existingDay.isEqual(newDay)) {
+                    existingTimeSlotList.addAll(newTimeSlotList);
+                    addedAvailabilitiesToBeRemovedList.add(newAvailabilitySlot);
+                }
+            }
+        }
+
+        if (!addedAvailabilitiesToBeRemovedList.isEmpty()) {
+            newAvailabilitySlotList.removeAll(addedAvailabilitiesToBeRemovedList);
+        }
+
+        return newAvailabilitySlotList;
+    }
+
+    private void addNewAvailabilityToNewDay(List<AvailabilitySlot> existingAvailabilitySlotList,
+                                            List<AvailabilitySlot> remainingNewAvailabilitySlotList) {
+        existingAvailabilitySlotList.addAll(remainingNewAvailabilitySlotList);
     }
 }
