@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 public class TimeSlot implements Serializable {
-    private final LocalTime from;
-    private final LocalTime to;
+    private LocalTime from;
+    private LocalTime to;
+
+    public TimeSlot() {
+    }
 
     public TimeSlot(LocalTime from, LocalTime to) {
         this.from = from;
