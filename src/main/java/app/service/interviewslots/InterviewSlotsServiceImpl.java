@@ -243,7 +243,9 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         List<AvailabilitySlot> secondInterviewerCommonAvailabilitySlots = getInterviewerCommonDayAvailabilitySlots(
                 commonDays, secondInterviewerAllAvailabilitySlots);
 
-        List<AvailabilitySlot> commonAvailabilitySlots = new ArrayList<>();
+        List<AvailabilitySlot> commonAvailabilitySlots = getFinalAvailabilitySlotsTwoInterviewers(
+                candidateCommonAvailabilitySlots, firstInterviewerCommonAvailabilitySlots,
+                secondInterviewerCommonAvailabilitySlots);
 
         return commonAvailabilitySlots;
     }
@@ -281,37 +283,63 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
     private List<AvailabilitySlot> getFinalAvailabilitySlotsOneInterviewer(
             List<AvailabilitySlot> candidateCommonAvailabilitySlots,
             List<AvailabilitySlot> interviewerCommonAvailabilitySlots) {
-        List<TimeSlot> timeSlots = new ArrayList<>();
+        List<AvailabilitySlot> availabilitySlots = calculateAvailabilityTimeSlotsOverlap(
+                candidateCommonAvailabilitySlots, interviewerCommonAvailabilitySlots);
+
+        return availabilitySlots;
+    }
+
+    private List<AvailabilitySlot> getFinalAvailabilitySlotsTwoInterviewers(
+            List<AvailabilitySlot> candidateCommonAvailabilitySlots,
+            List<AvailabilitySlot> firstInterviewerCommonAvailabilitySlots,
+            List<AvailabilitySlot> secondInterviewerCommonAvailabilitySlots) {
+        List<AvailabilitySlot> interviewersCommonAvailabilitySlots = calculateAvailabilityTimeSlotsOverlap(
+                firstInterviewerCommonAvailabilitySlots, secondInterviewerCommonAvailabilitySlots);
+        List<AvailabilitySlot> candidateAndInterviewersCommonAvailabilitySlots = calculateAvailabilityTimeSlotsOverlap(
+                candidateCommonAvailabilitySlots, interviewersCommonAvailabilitySlots);
+
+        return candidateAndInterviewersCommonAvailabilitySlots;
+    }
+
+    private List<AvailabilitySlot> calculateAvailabilityTimeSlotsOverlap(List<AvailabilitySlot> firstAvailabilitySlots,
+                                                                         List<AvailabilitySlot> secondAvailabilitySlots) {
         List<AvailabilitySlot> availabilitySlots = new ArrayList<>();
 
-        for (AvailabilitySlot candidateCommonAvailabilitySlot : candidateCommonAvailabilitySlots) {
-            for (AvailabilitySlot interviewerCommonAvailabilitySlot : interviewerCommonAvailabilitySlots) {
-                if (candidateCommonAvailabilitySlot.getDay().compareTo(interviewerCommonAvailabilitySlot.getDay())
+        for (AvailabilitySlot firstAvailabilitySlot : firstAvailabilitySlots) {
+            for (AvailabilitySlot secondAvailabilitySlot : secondAvailabilitySlots) {
+                if (firstAvailabilitySlot.getDay().compareTo(secondAvailabilitySlot.getDay())
                     == 0) {
-                    List<TimeSlot> candidateTimeSlots = candidateCommonAvailabilitySlot.getTimeSlotList();
-                    List<TimeSlot> interviewerTimeSlots = interviewerCommonAvailabilitySlot.getTimeSlotList();
+                    List<TimeSlot> firstTimeSlots = firstAvailabilitySlot.getTimeSlotList();
+                    List<TimeSlot> secondTimeSlots = secondAvailabilitySlot.getTimeSlotList();
 
-                    for (TimeSlot candidateTimeSlot : candidateTimeSlots) {
-                        for (TimeSlot interviewerTimeSlot : interviewerTimeSlots) {
-                            LocalTime candidateFrom = candidateTimeSlot.getFrom();
-                            LocalTime candidateTo = candidateTimeSlot.getTo();
-                            LocalTime interviewerFrom = interviewerTimeSlot.getFrom();
-                            LocalTime interviewerTo = interviewerTimeSlot.getTo();
+                    List<TimeSlot> timeSlots = new ArrayList<>();
 
-                            TimeSlot newTimeSlot = timeOverlapping(candidateFrom, candidateTo, interviewerFrom,
-                                                                   interviewerTo);
+                    for (TimeSlot firstTimeSlot : firstTimeSlots) {
+                        for (TimeSlot secondTimeSlot : secondTimeSlots) {
+                            LocalTime firstFrom = firstTimeSlot.getFrom();
+                            LocalTime firstTo = firstTimeSlot.getTo();
+                            LocalTime secondFrom = secondTimeSlot.getFrom();
+                            LocalTime secondTo = secondTimeSlot.getTo();
 
-                            timeSlots.add(newTimeSlot);
+                            TimeSlot newTimeSlot = overlappingTimeSlot(firstFrom, firstTo, secondFrom,
+                                                                       secondTo);
+
+                            if (newTimeSlot.getFrom() != null && newTimeSlot.getTo() != null) {
+                                timeSlots.add(newTimeSlot);
+                            }
                         }
                     }
 
-                    AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith()
-                                                                                .withDay(candidateCommonAvailabilitySlot
-                                                                                                 .getDay())
-                                                                                .withTimeSlotList(timeSlots)
-                                                                                .build();
+                    if (!timeSlots.isEmpty()) {
+                        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith()
+                                                                                    .withDay(
+                                                                                            secondAvailabilitySlot
+                                                                                                    .getDay())
+                                                                                    .withTimeSlotList(timeSlots)
+                                                                                    .build();
 
-                    availabilitySlots.add(availabilitySlot);
+                        availabilitySlots.add(availabilitySlot);
+                    }
                 }
             }
         }
@@ -319,16 +347,8 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return availabilitySlots;
     }
 
-    // TODO: 19/09/20 change method name
-    private List<AvailabilitySlot> teste2(List<AvailabilitySlot> candidateCommonAvailabilitySlots,
-                                          List<AvailabilitySlot> firstInterviewerCommonAvailabilitySlots,
-                                          List<AvailabilitySlot> secondInterviewerCommonAvailabilitySlots) {
-
-        return null;
-    }
-
-    private TimeSlot timeOverlapping(LocalTime candidateFrom, LocalTime candidateTo, LocalTime interviewerFrom,
-                                     LocalTime interviewerTo) {
+    private TimeSlot overlappingTimeSlot(LocalTime candidateFrom, LocalTime candidateTo, LocalTime interviewerFrom,
+                                         LocalTime interviewerTo) {
         TimeSlot timeSlot = new TimeSlot();
         LocalTime newFrom;
         LocalTime newTo;
