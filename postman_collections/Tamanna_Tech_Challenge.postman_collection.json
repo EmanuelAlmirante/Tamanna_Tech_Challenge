@@ -1,0 +1,510 @@
+{
+	"info": {
+		"_postman_id": "c01868cb-352b-4cad-b307-5edd42db938b",
+		"name": "Tamanna_Tech_Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Candidates",
+			"item": [
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/John Doe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/John Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"John Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/John Doe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/John Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"John Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateName\": \"John Doe\",\n    \"availabilitySlotList\":\n        [\n            {\n                \"day\": \"2014-01-01\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"09:00\",\n                        \"to\": \"11:00\"\n                    }\n                ]\n            },\n            {\n                \"day\": \"2014-01-02\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"09:00\",\n                        \"to\": \"18:00\"\n                    }\n                ]\n            }\n        ]  \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/availability/John Doe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/availability/John Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"availability",
+								"John Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/candidates/availability/John Doe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/candidates/availability/John Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"candidates",
+								"availability",
+								"John Doe"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Interviewers",
+			"item": [
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Smith\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/Jane Doe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/Jane Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"Jane Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/Jane Doe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/Jane Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"Jane Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interviewerName\": \"Jane Doe\",\n    \"availabilitySlotList\":\n        [\n            {\n                \"day\": \"2014-01-01\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"10:00\",\n                        \"to\": \"11:00\"\n                    }\n                ]\n            },\n            {\n                \"day\": \"2014-01-02\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"09:00\",\n                        \"to\": \"10:00\"\n                    },\n                    {\n                        \"from\": \"12:00\",\n                        \"to\": \"14:00\"\n                    }\n                ]\n            }\n        ]  \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interviewerName\": \"John Smith\",\n    \"availabilitySlotList\":\n        [\n            {\n                \"day\": \"2014-01-01\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"08:00\",\n                        \"to\": \"14:00\"\n                    }\n                ]\n            },\n            {\n                \"day\": \"2014-01-02\",\n                \"timeSlotList\":\n                [\n                    {\n                        \"from\": \"08:00\",\n                        \"to\": \"14:00\"\n                    }\n                ]\n            }\n        ]  \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/availability/Jane Doe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/availability/Jane Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"availability",
+								"Jane Doe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/tamanna/api/interviewers/availability/Jane Doe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interviewers/availability/Jane Doe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interviewers",
+								"availability",
+								"Jane Doe"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "InterviewSlots",
+			"item": [
+				{
+					"name": "http://localhost:8080/tamanna/api/interview-slots",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interviewersList\": \n        [\n            {\n                \"name\": \"Jane Doe\"\n            },\n            {\n                \"name\": \"John Smith\"\n            }\n        ],\n    \"candidate\": \"John Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tamanna/api/interview-slots",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tamanna",
+								"api",
+								"interview-slots"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
