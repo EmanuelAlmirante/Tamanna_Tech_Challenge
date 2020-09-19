@@ -1,8 +1,8 @@
 package app.service.candidate;
 
 import app.exception.BusinessException;
-import app.model.AvailabilitySlot;
-import app.model.TimeSlot;
+import app.model.utils.AvailabilitySlot;
+import app.model.utils.TimeSlot;
 import app.model.candidate.CandidateAvailabilityModel;
 import app.model.candidate.CandidateModel;
 import app.repository.candidate.CandidateAvailabilityRepository;

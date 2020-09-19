@@ -1,4 +1,4 @@
-package app.model;
+package app.model.utils;
 
 import java.io.Serializable;
 import java.time.LocalTime;

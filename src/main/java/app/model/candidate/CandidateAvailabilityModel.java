@@ -1,6 +1,6 @@
 package app.model.candidate;
 
-import app.model.AvailabilitySlot;
+import app.model.utils.AvailabilitySlot;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;

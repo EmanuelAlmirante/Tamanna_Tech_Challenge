@@ -1,8 +1,8 @@
 package app.service.interviewer;
 
 import app.exception.BusinessException;
-import app.model.AvailabilitySlot;
-import app.model.TimeSlot;
+import app.model.utils.AvailabilitySlot;
+import app.model.utils.TimeSlot;
 import app.model.interviewer.InterviewerAvailabilityModel;
 import app.model.interviewer.InterviewerModel;
 import app.repository.interviewer.InterviewerAvailabilityRepository;
