@@ -171,14 +171,6 @@ We need to define test scenarios and/or objectives in order to decide how are we
 • MethodName_ExpectedBehavior_StateUnderTest -> testStudentIsNotAdmittedIfMandatoryFieldsAreMissing
 
 • When_StateUnderTest_Expect_ExpectedBehavior -> StudentIsNotAdmittedIfMandatoryFieldsAreMissing
-
-- Avoid multiple asserts:
- 
-If one Assert fails, the subsequent Asserts will not be evaluated.
-
-Ensures you are not asserting multiple cases in your tests.
-
-Gives you the entire picture as to why your tests are failing.
  
 - Avoid Test Interdependence:
 
