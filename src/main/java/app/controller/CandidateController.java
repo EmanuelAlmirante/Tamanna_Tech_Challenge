@@ -31,13 +31,13 @@ public class CandidateController {
 
     @GetMapping("/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<CandidateModel> getCandidateById(@PathVariable String name) {
+    public Optional<CandidateModel> getCandidateByName(@PathVariable String name) {
         return candidateService.getCandidateByName(name);
     }
 
     @DeleteMapping("/{name}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCandidateById(@PathVariable String name) {
+    public void deleteCandidateByName(@PathVariable String name) {
         candidateService.deleteCandidateByName(name);
     }
 

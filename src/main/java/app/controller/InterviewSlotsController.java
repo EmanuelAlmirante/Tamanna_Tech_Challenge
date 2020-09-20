@@ -17,8 +17,8 @@ public class InterviewSlotsController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public InterviewSlotsReturnModel getInterviewSlots(@Valid @RequestBody
-                                                               InterviewSlotsQueryModel interviewSlotsQueryModel) {
+    public InterviewSlotsReturnModel getInterviewSlots(
+            @Valid @RequestBody InterviewSlotsQueryModel interviewSlotsQueryModel) {
         return interviewSlotsService.getInterviewSlots(interviewSlotsQueryModel);
     }
 }

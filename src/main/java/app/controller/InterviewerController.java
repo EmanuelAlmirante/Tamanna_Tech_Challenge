@@ -31,13 +31,13 @@ public class InterviewerController {
 
     @GetMapping("/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<InterviewerModel> getInterviewerById(@PathVariable String name) {
+    public Optional<InterviewerModel> getInterviewerByName(@PathVariable String name) {
         return interviewerService.getInterviewerByName(name);
     }
 
     @DeleteMapping("/{name}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInterviewerById(@PathVariable String name) {
+    public void deleteInterviewerByName(@PathVariable String name) {
         interviewerService.deleteInterviewerByName(name);
     }
 
