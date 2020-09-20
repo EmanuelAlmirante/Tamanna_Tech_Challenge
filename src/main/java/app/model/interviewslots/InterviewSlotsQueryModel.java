@@ -6,43 +6,43 @@ import app.model.interviewer.InterviewerModel;
 import java.util.List;
 
 public class InterviewSlotsQueryModel {
-    private final List<InterviewerModel> interviewersList;
-    private final CandidateModel candidate;
+    private final String candidateName;
+    private final List<String> interviewersNames;
 
-    public InterviewSlotsQueryModel(List<InterviewerModel> interviewersList, CandidateModel candidate) {
-        this.interviewersList = interviewersList;
-        this.candidate = candidate;
+    public InterviewSlotsQueryModel(String candidateName, List<String> interviewersNames) {
+        this.candidateName = candidateName;
+        this.interviewersNames = interviewersNames;
     }
 
     public InterviewSlotsQueryModel(Builder builder) {
-        this.interviewersList = builder.interviewerNameList;
-        this.candidate = builder.candidateName;
+        this.candidateName = builder.candidateName;
+        this.interviewersNames = builder.interviewersNames;
     }
 
-    public List<InterviewerModel> getInterviewersList() {
-        return interviewersList;
+    public String getCandidateName() {
+        return candidateName;
     }
 
-    public CandidateModel getCandidate() {
-        return candidate;
+    public List<String> getInterviewersNames() {
+        return interviewersNames;
     }
 
     public static class Builder {
-        private List<InterviewerModel> interviewerNameList;
-        private CandidateModel candidateName;
+        private String candidateName;
+        private List<String> interviewersNames;
 
         public static Builder interviewSlotsQueryModelWith() {
             return new Builder();
         }
 
-        public Builder withInterviewerNameList(List<InterviewerModel> interviewerNameList) {
-            this.interviewerNameList = interviewerNameList;
+        public Builder withCandidateName(String candidateName) {
+            this.candidateName = candidateName;
 
             return this;
         }
 
-        public Builder withCandidateName(CandidateModel candidateName) {
-            this.candidateName = candidateName;
+        public Builder withInterviewersNames(List<String> interviewersNames) {
+            this.interviewersNames = interviewersNames;
 
             return this;
         }

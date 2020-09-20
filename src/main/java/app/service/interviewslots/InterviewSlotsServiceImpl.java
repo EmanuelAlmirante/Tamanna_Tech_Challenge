@@ -46,23 +46,22 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         verifyCandidateExists(interviewSlotsQueryModel);
         verifyInterviewersExist(interviewSlotsQueryModel);
 
-        CandidateModel candidate = interviewSlotsQueryModel.getCandidate();
-        List<InterviewerModel> interviewers = interviewSlotsQueryModel.getInterviewersList();
-
-        List<AvailabilitySlot> availabilitySlots = getCommonAvailabilitySlots(interviewSlotsQueryModel);
+        String candidateName = interviewSlotsQueryModel.getCandidateName();
+        List<String> interviewersNames = interviewSlotsQueryModel.getInterviewersNames();
+        List<AvailabilitySlot> interviewAvailabilitySlots = getInterviewAvailabilitySlots(interviewSlotsQueryModel);
 
         InterviewSlotsReturnModel interviewSlotsReturnModel =
                 InterviewSlotsReturnModel.Builder.interviewSlotsReturnModelWith()
-                                                 .withCandidateName(candidate)
-                                                 .withInterviewerNameList(interviewers)
-                                                 .withInterviewAvailabilitySlotList(availabilitySlots)
+                                                 .withCandidateName(candidateName)
+                                                 .withInterviewerNameList(interviewersNames)
+                                                 .withInterviewAvailabilitySlotList(interviewAvailabilitySlots)
                                                  .build();
 
         return interviewSlotsReturnModel;
     }
 
     private void verifyCandidateExists(InterviewSlotsQueryModel interviewSlotsQueryModel) {
-        String candidateName = interviewSlotsQueryModel.getCandidate().getName();
+        String candidateName = interviewSlotsQueryModel.getCandidateName();
 
         Optional<CandidateModel> existingCandidate = candidateRepository.findById(candidateName);
 
@@ -72,11 +71,9 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
     }
 
     private void verifyInterviewersExist(InterviewSlotsQueryModel interviewSlotsQueryModel) {
-        List<InterviewerModel> interviewersList = interviewSlotsQueryModel.getInterviewersList();
+        List<String> interviewersNames = interviewSlotsQueryModel.getInterviewersNames();
 
-        for (InterviewerModel interviewer : interviewersList) {
-            String interviewerName = interviewer.getName();
-
+        for (String interviewerName : interviewersNames) {
             Optional<InterviewerModel> existingInterviewer = interviewerRepository.findById(interviewerName);
 
             if (existingInterviewer.isEmpty()) {
@@ -85,24 +82,27 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         }
     }
 
-    private List<AvailabilitySlot> getCommonAvailabilitySlots(InterviewSlotsQueryModel interviewSlotsQueryModel) {
-        CandidateModel candidate = interviewSlotsQueryModel.getCandidate();
-        CandidateAvailabilityModel candidateAvailability = getCandidateAvailability(candidate);
+    private List<AvailabilitySlot> getInterviewAvailabilitySlots(InterviewSlotsQueryModel interviewSlotsQueryModel) {
+        String candidateName = interviewSlotsQueryModel.getCandidateName();
+        CandidateAvailabilityModel candidateAvailability = getCandidateAvailability(candidateName);
 
-        InterviewerModel firstInterviewer = interviewSlotsQueryModel.getInterviewersList().get(0);
-        InterviewerAvailabilityModel firstInterviewerAvailability = getInterviewerAvailability(firstInterviewer);
+        List<String> interviewersNames = interviewSlotsQueryModel.getInterviewersNames();
+
+        String firstInterviewerName = interviewersNames.get(0);
+
+        InterviewerAvailabilityModel firstInterviewerAvailability = getInterviewerAvailability(firstInterviewerName);
 
         InterviewerAvailabilityModel secondInterviewerAvailability =
                 InterviewerAvailabilityModel.Builder.interviewerAvailabilityModelWith().build();
 
-        if (interviewSlotsQueryModel.getInterviewersList().size() > 1) {
-            InterviewerModel secondInterviewer = interviewSlotsQueryModel.getInterviewersList().get(1);
-            secondInterviewerAvailability = getInterviewerAvailability(secondInterviewer);
+        if (interviewersNames.size() > 1) {
+            String secondInterviewerName = interviewersNames.get(1);
+            secondInterviewerAvailability = getInterviewerAvailability(secondInterviewerName);
         }
 
         List<AvailabilitySlot> commonAvailabilitySlots;
 
-        if (interviewSlotsQueryModel.getInterviewersList().size() == 1) {
+        if (interviewSlotsQueryModel.getInterviewersNames().size() == 1) {
             List<LocalDate> commonDaysOneInterviewer = getAvailabilitiesCommonDaysOneInterviewer(candidateAvailability,
                                                                                                  firstInterviewerAvailability);
 
@@ -123,9 +123,7 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return commonAvailabilitySlots;
     }
 
-    private CandidateAvailabilityModel getCandidateAvailability(CandidateModel candidate) {
-        String candidateName = candidate.getName();
-
+    private CandidateAvailabilityModel getCandidateAvailability(String candidateName) {
         CandidateAvailabilityModel candidateAvailability =
                 candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(candidateName);
 
@@ -136,9 +134,7 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return candidateAvailability;
     }
 
-    private InterviewerAvailabilityModel getInterviewerAvailability(InterviewerModel interviewer) {
-        String interviewerName = interviewer.getName();
-
+    private InterviewerAvailabilityModel getInterviewerAvailability(String interviewerName) {
         InterviewerAvailabilityModel interviewerAvailability = interviewerAvailabilityRepository
                 .getInterviewerAvailabilityByInterviewerName(interviewerName);
 

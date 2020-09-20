@@ -1,28 +1,26 @@
 package app.model.interviewslots;
 
-import app.model.candidate.CandidateModel;
-import app.model.interviewer.InterviewerModel;
 import app.model.utils.AvailabilitySlot;
 
 import java.util.List;
 
 public class InterviewSlotsReturnModel {
-    private final List<InterviewerModel> interviewersList;
-    private final CandidateModel candidate;
+    private final String candidateName;
+    private final List<String> interviewersNames;
     private final List<AvailabilitySlot> interviewAvailabilitySlotList;
 
     public InterviewSlotsReturnModel(Builder builder) {
-        this.interviewersList = builder.interviewersList;
-        this.candidate = builder.candidate;
+        this.candidateName = builder.candidateName;
+        this.interviewersNames = builder.interviewersNames;
         this.interviewAvailabilitySlotList = builder.interviewAvailabilitySlotList;
     }
 
-    public List<InterviewerModel> getInterviewersList() {
-        return interviewersList;
+    public String getCandidateName() {
+        return candidateName;
     }
 
-    public CandidateModel getCandidate() {
-        return candidate;
+    public List<String> getInterviewersNames() {
+        return interviewersNames;
     }
 
     public List<AvailabilitySlot> getInterviewAvailabilitySlotList() {
@@ -30,22 +28,22 @@ public class InterviewSlotsReturnModel {
     }
 
     public static class Builder {
-        private List<InterviewerModel> interviewersList;
-        private CandidateModel candidate;
+        private String candidateName;
+        private List<String> interviewersNames;
         private List<AvailabilitySlot> interviewAvailabilitySlotList;
 
         public static Builder interviewSlotsReturnModelWith() {
             return new Builder();
         }
 
-        public Builder withInterviewerNameList(List<InterviewerModel> interviewersList) {
-            this.interviewersList = interviewersList;
+        public Builder withCandidateName(String candidateName) {
+            this.candidateName = candidateName;
 
             return this;
         }
 
-        public Builder withCandidateName(CandidateModel candidate) {
-            this.candidate = candidate;
+        public Builder withInterviewerNameList(List<String> interviewersNames) {
+            this.interviewersNames = interviewersNames;
 
             return this;
         }
