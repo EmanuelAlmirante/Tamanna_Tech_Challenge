@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class InterviewSlotsServiceImpl implements InterviewSlotsService {
@@ -88,40 +85,26 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
 
         List<String> interviewersNames = interviewSlotsQueryModel.getInterviewersNames();
 
-        String firstInterviewerName = interviewersNames.get(0);
+        List<InterviewerAvailabilityModel> interviewerAvailabilities = new ArrayList<>();
 
-        InterviewerAvailabilityModel firstInterviewerAvailability = getInterviewerAvailability(firstInterviewerName);
+        for (String interviewerName : interviewersNames) {
+            InterviewerAvailabilityModel interviewerAvailability = getInterviewerAvailability(interviewerName);
 
-        InterviewerAvailabilityModel secondInterviewerAvailability =
-                InterviewerAvailabilityModel.Builder.interviewerAvailabilityModelWith().build();
-
-        if (interviewersNames.size() > 1) {
-            String secondInterviewerName = interviewersNames.get(1);
-            secondInterviewerAvailability = getInterviewerAvailability(secondInterviewerName);
+            interviewerAvailabilities.add(interviewerAvailability);
         }
 
-        List<AvailabilitySlot> commonAvailabilitySlots;
+        List<AvailabilitySlot> interviewAvailabilitySlots;
 
-        if (interviewSlotsQueryModel.getInterviewersNames().size() == 1) {
-            List<LocalDate> commonDaysOneInterviewer = getAvailabilitiesCommonDaysOneInterviewer(candidateAvailability,
-                                                                                                 firstInterviewerAvailability);
+        Set<LocalDate> commonDaysOneInterviewer = getAvailabilitiesCommonDays(candidateAvailability,
+                                                                              interviewerAvailabilities);
 
-            commonAvailabilitySlots = getCommonAvailabilitySlotsOneInterviewer(commonDaysOneInterviewer,
-                                                                               candidateAvailability,
-                                                                               firstInterviewerAvailability);
-        } else {
-            List<LocalDate> commonDaysTwoInterviewers = getAvailabilitiesCommonDaysTwoInterviewers(
-                    candidateAvailability, firstInterviewerAvailability,
-                    secondInterviewerAvailability);
+        interviewAvailabilitySlots = getInterviewAvailabilitySlots(commonDaysOneInterviewer,
+                                                                   candidateAvailability,
+                                                                   interviewerAvailabilities);
 
-            commonAvailabilitySlots = getCommonAvailabilitySlotsTwoInterviewers(commonDaysTwoInterviewers,
-                                                                                candidateAvailability,
-                                                                                firstInterviewerAvailability,
-                                                                                secondInterviewerAvailability);
-        }
-
-        return commonAvailabilitySlots;
+        return interviewAvailabilitySlots;
     }
+
 
     private CandidateAvailabilityModel getCandidateAvailability(String candidateName) {
         CandidateAvailabilityModel candidateAvailability =
@@ -145,55 +128,22 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return interviewerAvailability;
     }
 
-    private List<LocalDate> getAvailabilitiesCommonDaysOneInterviewer(CandidateAvailabilityModel candidateAvailability,
-                                                                      InterviewerAvailabilityModel interviewerAvailability) {
+    private Set<LocalDate> getAvailabilitiesCommonDays(CandidateAvailabilityModel candidateAvailability,
+                                                       List<InterviewerAvailabilityModel> interviewersAvailabilities) {
         List<AvailabilitySlot> candidateAvailabilitySlots = candidateAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> interviewerAvailabilitySlots = interviewerAvailability.getAvailabilitySlotList();
 
-        List<LocalDate> candidateAvailabilityDays = candidateAvailabilitySlots.stream().map(AvailabilitySlot::getDay)
-                                                                              .collect(Collectors.toList());
+        Set<LocalDate> commonDays = new HashSet<>();
 
-        List<LocalDate> interviewerAvailabilityDays = interviewerAvailabilitySlots.stream().map(
-                AvailabilitySlot::getDay).collect(Collectors.toList());
+        for (AvailabilitySlot candidateAvailabilitySlot : candidateAvailabilitySlots) {
+            LocalDate candidateAvailabilityDay = candidateAvailabilitySlot.getDay();
 
-        List<LocalDate> commonDays = new ArrayList<>();
+            for (InterviewerAvailabilityModel interviewerAvailability : interviewersAvailabilities) {
+                List<AvailabilitySlot> interviewerAvailabilitySlots = interviewerAvailability.getAvailabilitySlotList();
 
-        for (LocalDate candidateAvailabilityDay : candidateAvailabilityDays) {
-            for (LocalDate interviewerAvailabilityDay : interviewerAvailabilityDays) {
-                if (candidateAvailabilityDay.compareTo(interviewerAvailabilityDay) == 0) {
-                    commonDays.add(candidateAvailabilityDay);
-                }
-            }
-        }
+                for (AvailabilitySlot interviewerAvailabilitySlot : interviewerAvailabilitySlots) {
+                    LocalDate interviewerAvailabilityDay = interviewerAvailabilitySlot.getDay();
 
-        return commonDays;
-    }
-
-    private List<LocalDate> getAvailabilitiesCommonDaysTwoInterviewers(CandidateAvailabilityModel candidateAvailability,
-                                                                       InterviewerAvailabilityModel firstInterviewerAvailability,
-                                                                       InterviewerAvailabilityModel secondInterviewerAvailability) {
-        List<AvailabilitySlot> candidateAvailabilitySlots = candidateAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> firstInterviewerAvailabilitySlots =
-                firstInterviewerAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> secondInterviewerAvailabilitySlots =
-                secondInterviewerAvailability.getAvailabilitySlotList();
-
-        List<LocalDate> candidateAvailabilityDays = candidateAvailabilitySlots.stream().map(AvailabilitySlot::getDay)
-                                                                              .collect(Collectors.toList());
-
-        List<LocalDate> firstInterviewerAvailabilityDays = firstInterviewerAvailabilitySlots.stream().map(
-                AvailabilitySlot::getDay).collect(Collectors.toList());
-
-        List<LocalDate> secondInterviewerAvailabilityDays = secondInterviewerAvailabilitySlots.stream().map(
-                AvailabilitySlot::getDay).collect(Collectors.toList());
-
-        List<LocalDate> commonDays = new ArrayList<>();
-
-        for (LocalDate candidateAvailabilityDay : candidateAvailabilityDays) {
-            for (LocalDate firstInterviewerAvailabilityDay : firstInterviewerAvailabilityDays) {
-                for (LocalDate secondInterviewerAvailabilityDay : secondInterviewerAvailabilityDays) {
-                    if (candidateAvailabilityDay.compareTo(firstInterviewerAvailabilityDay) == 0
-                        && candidateAvailabilityDay.compareTo(secondInterviewerAvailabilityDay) == 0) {
+                    if (candidateAvailabilityDay.compareTo(interviewerAvailabilityDay) == 0) {
                         commonDays.add(candidateAvailabilityDay);
                     }
                 }
@@ -203,50 +153,30 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return commonDays;
     }
 
-    private List<AvailabilitySlot> getCommonAvailabilitySlotsOneInterviewer(List<LocalDate> commonDays,
-                                                                            CandidateAvailabilityModel candidateAvailability,
-                                                                            InterviewerAvailabilityModel interviewerAvailability) {
+    private List<AvailabilitySlot> getInterviewAvailabilitySlots(Set<LocalDate> commonDays,
+                                                                 CandidateAvailabilityModel candidateAvailability,
+                                                                 List<InterviewerAvailabilityModel> interviewersAvailabilities) {
         List<AvailabilitySlot> candidateAllAvailabilitySlots = candidateAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> candidateCommonAvailabilitySlots = getCandidateCommonDayAvailabilitySlots(commonDays,
-                                                                                                         candidateAllAvailabilitySlots);
+        List<AvailabilitySlot> interviewAvailabilitySlots = getCandidateCommonDayAvailabilitySlots(commonDays,
+                                                                                                   candidateAllAvailabilitySlots);
 
-        List<AvailabilitySlot> interviewerAllAvailabilitySlots =
-                interviewerAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> interviewerCommonAvailabilitySlots = getInterviewerCommonDayAvailabilitySlots(
-                commonDays, interviewerAllAvailabilitySlots);
+        for (InterviewerAvailabilityModel interviewerAvailability : interviewersAvailabilities) {
+            List<AvailabilitySlot> interviewerAllAvailabilitySlots = interviewerAvailability.getAvailabilitySlotList();
 
-        List<AvailabilitySlot> commonAvailabilitySlots = getFinalAvailabilitySlotsOneInterviewer(
-                candidateCommonAvailabilitySlots, interviewerCommonAvailabilitySlots);
+            List<AvailabilitySlot> interviewerCommonAvailabilitySlots = getInterviewerCommonDayAvailabilitySlots(
+                    commonDays, interviewerAllAvailabilitySlots);
 
-        return commonAvailabilitySlots;
+            List<AvailabilitySlot> test = getFinalAvailabilitySlotsOneInterviewer(interviewAvailabilitySlots,
+                                                                                  interviewerCommonAvailabilitySlots);
+
+            interviewAvailabilitySlots.clear();
+            interviewAvailabilitySlots.addAll(test);
+        }
+
+        return interviewAvailabilitySlots;
     }
 
-    private List<AvailabilitySlot> getCommonAvailabilitySlotsTwoInterviewers(List<LocalDate> commonDays,
-                                                                             CandidateAvailabilityModel candidateAvailability,
-                                                                             InterviewerAvailabilityModel firstInterviewerAvailability,
-                                                                             InterviewerAvailabilityModel secondInterviewerAvailability) {
-        List<AvailabilitySlot> candidateAllAvailabilitySlots = candidateAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> candidateCommonAvailabilitySlots = getCandidateCommonDayAvailabilitySlots(commonDays,
-                                                                                                         candidateAllAvailabilitySlots);
-
-        List<AvailabilitySlot> firstInterviewerAllAvailabilitySlots =
-                firstInterviewerAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> firstInterviewerCommonAvailabilitySlots = getInterviewerCommonDayAvailabilitySlots(
-                commonDays, firstInterviewerAllAvailabilitySlots);
-
-        List<AvailabilitySlot> secondInterviewerAllAvailabilitySlots =
-                secondInterviewerAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> secondInterviewerCommonAvailabilitySlots = getInterviewerCommonDayAvailabilitySlots(
-                commonDays, secondInterviewerAllAvailabilitySlots);
-
-        List<AvailabilitySlot> commonAvailabilitySlots = getFinalAvailabilitySlotsTwoInterviewers(
-                candidateCommonAvailabilitySlots, firstInterviewerCommonAvailabilitySlots,
-                secondInterviewerCommonAvailabilitySlots);
-
-        return commonAvailabilitySlots;
-    }
-
-    private List<AvailabilitySlot> getCandidateCommonDayAvailabilitySlots(List<LocalDate> commonDays,
+    private List<AvailabilitySlot> getCandidateCommonDayAvailabilitySlots(Set<LocalDate> commonDays,
                                                                           List<AvailabilitySlot> candidateAllAvailabilitySlots) {
         List<AvailabilitySlot> candidateCommonAvailabilitySlots = new ArrayList<>();
 
@@ -261,7 +191,7 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return candidateCommonAvailabilitySlots;
     }
 
-    private List<AvailabilitySlot> getInterviewerCommonDayAvailabilitySlots(List<LocalDate> commonDays,
+    private List<AvailabilitySlot> getInterviewerCommonDayAvailabilitySlots(Set<LocalDate> commonDays,
                                                                             List<AvailabilitySlot> interviewerAllAvailabilitySlots) {
         List<AvailabilitySlot> interviewerCommonAvailabilitySlots = new ArrayList<>();
 
@@ -279,36 +209,28 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
     private List<AvailabilitySlot> getFinalAvailabilitySlotsOneInterviewer(
             List<AvailabilitySlot> candidateCommonAvailabilitySlots,
             List<AvailabilitySlot> interviewerCommonAvailabilitySlots) {
-        List<AvailabilitySlot> availabilitySlots = calculateAvailabilityTimeSlotsOverlap(
+        List<AvailabilitySlot> availabilitySlots = calculateInterviewAvailabilitySlotsOverlap(
                 candidateCommonAvailabilitySlots, interviewerCommonAvailabilitySlots);
 
         return availabilitySlots;
     }
 
-    private List<AvailabilitySlot> getFinalAvailabilitySlotsTwoInterviewers(
-            List<AvailabilitySlot> candidateCommonAvailabilitySlots,
-            List<AvailabilitySlot> firstInterviewerCommonAvailabilitySlots,
-            List<AvailabilitySlot> secondInterviewerCommonAvailabilitySlots) {
-        List<AvailabilitySlot> interviewersCommonAvailabilitySlots = calculateAvailabilityTimeSlotsOverlap(
-                firstInterviewerCommonAvailabilitySlots, secondInterviewerCommonAvailabilitySlots);
-        List<AvailabilitySlot> candidateAndInterviewersCommonAvailabilitySlots = calculateAvailabilityTimeSlotsOverlap(
-                candidateCommonAvailabilitySlots, interviewersCommonAvailabilitySlots);
-
-        return candidateAndInterviewersCommonAvailabilitySlots;
-    }
-
-    private List<AvailabilitySlot> calculateAvailabilityTimeSlotsOverlap(List<AvailabilitySlot> firstAvailabilitySlots,
-                                                                         List<AvailabilitySlot> secondAvailabilitySlots) {
-        List<AvailabilitySlot> availabilitySlots = new ArrayList<>();
+    private List<AvailabilitySlot> calculateInterviewAvailabilitySlotsOverlap(
+            List<AvailabilitySlot> firstAvailabilitySlots,
+            List<AvailabilitySlot> secondAvailabilitySlots) {
+        List<AvailabilitySlot> interviewAvailabilitySlots = new ArrayList<>();
 
         for (AvailabilitySlot firstAvailabilitySlot : firstAvailabilitySlots) {
             for (AvailabilitySlot secondAvailabilitySlot : secondAvailabilitySlots) {
-                if (firstAvailabilitySlot.getDay().compareTo(secondAvailabilitySlot.getDay())
+                LocalDate firstAvailabilitySlotDay = firstAvailabilitySlot.getDay();
+                LocalDate secondAvailabilitySlotDay = secondAvailabilitySlot.getDay();
+
+                if (firstAvailabilitySlotDay.compareTo(secondAvailabilitySlotDay)
                     == 0) {
                     List<TimeSlot> firstTimeSlots = firstAvailabilitySlot.getTimeSlotList();
                     List<TimeSlot> secondTimeSlots = secondAvailabilitySlot.getTimeSlotList();
 
-                    List<TimeSlot> timeSlots = new ArrayList<>();
+                    List<TimeSlot> overlappingTimeSlots = new ArrayList<>();
 
                     for (TimeSlot firstTimeSlot : firstTimeSlots) {
                         for (TimeSlot secondTimeSlot : secondTimeSlots) {
@@ -317,34 +239,34 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
                             LocalTime secondFrom = secondTimeSlot.getFrom();
                             LocalTime secondTo = secondTimeSlot.getTo();
 
-                            TimeSlot newTimeSlot = overlappingTimeSlot(firstFrom, firstTo, secondFrom,
-                                                                       secondTo);
+                            TimeSlot overlappingTimeSlot = getOverlappingTimeSlot(firstFrom, firstTo, secondFrom,
+                                                                                  secondTo);
 
-                            if (newTimeSlot.getFrom() != null && newTimeSlot.getTo() != null) {
-                                timeSlots.add(newTimeSlot);
+                            if (overlappingTimeSlot.getFrom() != null && overlappingTimeSlot.getTo() != null) {
+                                overlappingTimeSlots.add(overlappingTimeSlot);
                             }
                         }
                     }
 
-                    if (!timeSlots.isEmpty()) {
+                    if (!overlappingTimeSlots.isEmpty()) {
                         AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith()
-                                                                                    .withDay(
-                                                                                            secondAvailabilitySlot
-                                                                                                    .getDay())
-                                                                                    .withTimeSlotList(timeSlots)
+                                                                                    .withDay(secondAvailabilitySlot
+                                                                                                     .getDay())
+                                                                                    .withTimeSlotList(
+                                                                                            overlappingTimeSlots)
                                                                                     .build();
 
-                        availabilitySlots.add(availabilitySlot);
+                        interviewAvailabilitySlots.add(availabilitySlot);
                     }
                 }
             }
         }
 
-        return availabilitySlots;
+        return interviewAvailabilitySlots;
     }
 
-    private TimeSlot overlappingTimeSlot(LocalTime candidateFrom, LocalTime candidateTo, LocalTime interviewerFrom,
-                                         LocalTime interviewerTo) {
+    private TimeSlot getOverlappingTimeSlot(LocalTime candidateFrom, LocalTime candidateTo, LocalTime interviewerFrom,
+                                            LocalTime interviewerTo) {
         TimeSlot timeSlot = new TimeSlot();
         LocalTime newFrom;
         LocalTime newTo;

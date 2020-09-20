@@ -1,8 +1,5 @@
 package app.model.interviewslots;
 
-import app.model.candidate.CandidateModel;
-import app.model.interviewer.InterviewerModel;
-
 import java.util.List;
 
 public class InterviewSlotsQueryModel {
