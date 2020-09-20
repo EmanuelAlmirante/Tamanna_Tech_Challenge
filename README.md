@@ -26,6 +26,7 @@ You will need to install **Intellij IDEA** (https://www.jetbrains.com/idea/downl
 - Swagger
 - H2 Database (in-memory)
 - JUnit
+- Hamcrest
 - Mockito
 
 
