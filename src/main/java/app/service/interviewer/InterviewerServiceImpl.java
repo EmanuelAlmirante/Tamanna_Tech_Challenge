@@ -1,10 +1,10 @@
 package app.service.interviewer;
 
 import app.exception.BusinessException;
-import app.model.utils.AvailabilitySlot;
-import app.model.utils.TimeSlot;
 import app.model.interviewer.InterviewerAvailabilityModel;
 import app.model.interviewer.InterviewerModel;
+import app.model.utils.AvailabilitySlot;
+import app.model.utils.TimeSlot;
 import app.repository.interviewer.InterviewerAvailabilityRepository;
 import app.repository.interviewer.InterviewerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,8 +151,9 @@ public class InterviewerServiceImpl implements InterviewerService {
 
     private InterviewerAvailabilityModel verifyIfInterviewerHasAvailabilityCreated(
             InterviewerAvailabilityModel interviewerAvailabilityModel) {
-        return interviewerAvailabilityRepository.getInterviewerAvailabilityByInterviewerName(
-                interviewerAvailabilityModel.getInterviewerModel().getName());
+        String interviewerName = interviewerAvailabilityModel.getInterviewerModel().getName();
+
+        return interviewerAvailabilityRepository.getInterviewerAvailabilityByInterviewerName(interviewerName);
     }
 
     private void addNewAvailability(InterviewerAvailabilityModel interviewerExistingAvailabilityModel,

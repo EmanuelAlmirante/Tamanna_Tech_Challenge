@@ -1,10 +1,10 @@
 package app.service.candidate;
 
 import app.exception.BusinessException;
-import app.model.utils.AvailabilitySlot;
-import app.model.utils.TimeSlot;
 import app.model.candidate.CandidateAvailabilityModel;
 import app.model.candidate.CandidateModel;
+import app.model.utils.AvailabilitySlot;
+import app.model.utils.TimeSlot;
 import app.repository.candidate.CandidateAvailabilityRepository;
 import app.repository.candidate.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,8 +141,8 @@ public class CandidateServiceImpl implements CandidateService {
 
                 if (newTimeSlotFromTime.getMinute() != 0 || newTimeSlotToTime.getMinute() != 0) {
                     throw new BusinessException(
-                            "Availability slot must be from the beginning of the hour until the beginning of the next "
-                            + "hour.",
+                            "Availability slot must be from the beginning of the hour until the beginning of the next"
+                            + " hour.",
                             "From: " + newTimeSlotFromTime, "To: " + newTimeSlotToTime);
                 }
             }
@@ -151,8 +151,9 @@ public class CandidateServiceImpl implements CandidateService {
 
     private CandidateAvailabilityModel verifyIfCandidateHasAvailabilityCreated(
             CandidateAvailabilityModel candidateAvailabilityModel) {
-        return candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(
-                candidateAvailabilityModel.getCandidateModel().getName());
+        String candidateName = candidateAvailabilityModel.getCandidateModel().getName();
+
+        return candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(candidateName);
     }
 
     private void addNewAvailability(CandidateAvailabilityModel candidateExistingAvailabilityModel,
