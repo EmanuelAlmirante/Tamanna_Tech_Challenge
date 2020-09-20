@@ -172,7 +172,7 @@ public class InterviewerServiceImpl implements InterviewerService {
 
     private List<AvailabilitySlot> addNewAvailabilityToExistingDay(
             List<AvailabilitySlot> existingAvailabilitySlotList, List<AvailabilitySlot> newAvailabilitySlotList) {
-        List<AvailabilitySlot> addedAvailabilitiesToBeRemovedList = new ArrayList<>();
+        List<AvailabilitySlot> addedAvailabilitiesList = new ArrayList<>();
 
         for (AvailabilitySlot existingAvailabilitySlot : existingAvailabilitySlotList) {
             List<TimeSlot> existingTimeSlotList = existingAvailabilitySlot.getTimeSlotList();
@@ -184,13 +184,13 @@ public class InterviewerServiceImpl implements InterviewerService {
 
                 if (existingDay.isEqual(newDay)) {
                     existingTimeSlotList.addAll(newTimeSlotList);
-                    addedAvailabilitiesToBeRemovedList.add(newAvailabilitySlot);
+                    addedAvailabilitiesList.add(newAvailabilitySlot);
                 }
             }
         }
 
-        if (!addedAvailabilitiesToBeRemovedList.isEmpty()) {
-            newAvailabilitySlotList.removeAll(addedAvailabilitiesToBeRemovedList);
+        if (!addedAvailabilitiesList.isEmpty()) {
+            newAvailabilitySlotList.removeAll(addedAvailabilitiesList);
         }
 
         return newAvailabilitySlotList;

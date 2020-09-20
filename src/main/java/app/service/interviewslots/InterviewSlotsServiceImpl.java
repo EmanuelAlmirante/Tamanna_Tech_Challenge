@@ -161,13 +161,13 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
                                                               CandidateAvailabilityModel candidateAvailability,
                                                               List<InterviewerAvailabilityModel> interviewersAvailabilities) {
         List<AvailabilitySlot> candidateAvailabilitySlots = candidateAvailability.getAvailabilitySlotList();
-        List<AvailabilitySlot> interviewAvailabilitySlots = getCommonDayAvailabilitySlots(commonDays,
-                                                                                          candidateAvailabilitySlots);
+        List<AvailabilitySlot> interviewAvailabilitySlots = getAvailabilitySlotsOfCommonDays(commonDays,
+                                                                                             candidateAvailabilitySlots);
 
         for (InterviewerAvailabilityModel interviewerAvailability : interviewersAvailabilities) {
             List<AvailabilitySlot> interviewerAllAvailabilitySlots = interviewerAvailability.getAvailabilitySlotList();
 
-            List<AvailabilitySlot> interviewerCommonAvailabilitySlots = getCommonDayAvailabilitySlots(
+            List<AvailabilitySlot> interviewerCommonAvailabilitySlots = getAvailabilitySlotsOfCommonDays(
                     commonDays, interviewerAllAvailabilitySlots);
 
             interviewAvailabilitySlots = getOverlappingAvailabilitySlots(interviewAvailabilitySlots,
@@ -177,19 +177,19 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
         return interviewAvailabilitySlots;
     }
 
-    private List<AvailabilitySlot> getCommonDayAvailabilitySlots(Set<LocalDate> commonDays,
-                                                                 List<AvailabilitySlot> availabilitySlots) {
-        List<AvailabilitySlot> commonAvailabilitySlots = new ArrayList<>();
+    private List<AvailabilitySlot> getAvailabilitySlotsOfCommonDays(Set<LocalDate> commonDays,
+                                                                    List<AvailabilitySlot> availabilitySlots) {
+        List<AvailabilitySlot> availabilitySlotsOfCommonDays = new ArrayList<>();
 
         for (AvailabilitySlot availabilitySlot : availabilitySlots) {
             for (LocalDate localDate : commonDays) {
                 if (availabilitySlot.getDay().compareTo(localDate) == 0) {
-                    commonAvailabilitySlots.add(availabilitySlot);
+                    availabilitySlotsOfCommonDays.add(availabilitySlot);
                 }
             }
         }
 
-        return commonAvailabilitySlots;
+        return availabilitySlotsOfCommonDays;
     }
 
     private List<AvailabilitySlot> getOverlappingAvailabilitySlots(
@@ -235,9 +235,10 @@ public class InterviewSlotsServiceImpl implements InterviewSlotsService {
                     }
 
                     if (!overlappingTimeSlots.isEmpty()) {
+                        LocalDate availabilitySlotDay = secondAvailabilitySlot.getDay();
+
                         AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith()
-                                                                                    .withDay(secondAvailabilitySlot
-                                                                                                     .getDay())
+                                                                                    .withDay(availabilitySlotDay)
                                                                                     .withTimeSlotList(
                                                                                             overlappingTimeSlots)
                                                                                     .build();

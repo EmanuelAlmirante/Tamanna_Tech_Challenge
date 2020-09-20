@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InterviewerServiceImplTests {
@@ -119,7 +119,56 @@ public class InterviewerServiceImplTests {
     }
 
     @Test
-    public void createInterviewerAvailabilityNewAvailability() {
+    public void getAllInterviewersSuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+        InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
+                                                               .build();
+        List<InterviewerModel> interviewersToBeReturned = Collections.singletonList(interviewer);
+
+        // Act
+        when(interviewerRepository.findAll()).thenReturn(interviewersToBeReturned);
+
+        List<InterviewerModel> interviewersReturned = interviewerServiceImpl.getAllInterviewers();
+
+        // Assert
+        assertNotNull(interviewersReturned);
+        assertEquals(interviewersToBeReturned.size(), interviewersReturned.size());
+        assertEquals(interviewersToBeReturned, interviewersReturned);
+    }
+
+    @Test
+    public void getInterviewerByNameSuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+        InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
+                                                               .build();
+
+        // Act
+        when(interviewerRepository.findById(interviewerName)).thenReturn(Optional.of(interviewer));
+
+        Optional<InterviewerModel> interviewerReturned = interviewerServiceImpl.getInterviewerByName(interviewerName);
+
+        // Assert
+        assertNotNull(interviewerReturned);
+        assertEquals(interviewer.getName(), interviewerReturned.get().getName());
+        assertEquals(interviewer, interviewerReturned.get());
+    }
+
+    @Test
+    public void deleteInterviewerByNameSuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+
+        // Act
+        interviewerServiceImpl.deleteInterviewerByName(interviewerName);
+
+        // Assert
+        verify(interviewerRepository, times(1)).deleteById(interviewerName);
+    }
+
+    @Test
+    public void createInterviewerAvailabilityNewAvailabilitySuccessfully() {
         // Arrange
         String interviewerName = "John Doe";
         InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
@@ -297,7 +346,7 @@ public class InterviewerServiceImplTests {
 
         TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(
                 LocalTime.of(11, 0))
-                                                    .build();
+                                            .build();
         List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
 
         AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
@@ -424,7 +473,8 @@ public class InterviewerServiceImplTests {
         try {
             interviewerServiceImpl.createInterviewerAvailability(interviewerAvailability);
         } catch (BusinessException be) {
-            String exceptionMessage =  "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+            String exceptionMessage =
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }
@@ -460,11 +510,117 @@ public class InterviewerServiceImplTests {
         try {
             interviewerServiceImpl.createInterviewerAvailability(interviewerAvailability);
         } catch (BusinessException be) {
-            String exceptionMessage =  "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+            String exceptionMessage =
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }
 
         fail("Business exception of invalid to was not thrown!");
+    }
+
+    @Test
+    public void getAllInterviewersAvailabilitySuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+        InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
+                                                               .build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        InterviewerAvailabilityModel interviewerAvailability =
+                InterviewerAvailabilityModel.Builder.interviewerAvailabilityModelWith()
+                                                    .withInterviewerModel(interviewer)
+                                                    .withAvailabilitySlotList(availabilitySlots)
+                                                    .build();
+
+        List<InterviewerAvailabilityModel> interviewersAvailabilitiesToBeReturned = Collections.singletonList(
+                interviewerAvailability);
+
+        // Act
+        when(interviewerAvailabilityRepository.findAll()).thenReturn(interviewersAvailabilitiesToBeReturned);
+
+
+        List<InterviewerAvailabilityModel> interviewersAvailabilitiesReturned =
+                interviewerServiceImpl.getAllInterviewersAvailability();
+
+        // Assert
+        assertNotNull(interviewersAvailabilitiesReturned);
+        assertEquals(interviewersAvailabilitiesToBeReturned.size(), interviewersAvailabilitiesReturned.size());
+        assertEquals(interviewersAvailabilitiesToBeReturned, interviewersAvailabilitiesReturned);
+    }
+
+    @Test
+    public void getInterviewerAvailabilityByNameSuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+        InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
+                                                               .build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        InterviewerAvailabilityModel interviewerAvailability =
+                InterviewerAvailabilityModel.Builder.interviewerAvailabilityModelWith()
+                                                    .withInterviewerModel(interviewer)
+                                                    .withAvailabilitySlotList(availabilitySlots)
+                                                    .build();
+
+
+        // Act
+        when(interviewerAvailabilityRepository.getInterviewerAvailabilityByInterviewerName(interviewerName)).thenReturn(
+                interviewerAvailability);
+
+
+        InterviewerAvailabilityModel interviewerAvailabilityReturned =
+                interviewerServiceImpl.getInterviewerAvailabilityByName(interviewerName);
+
+        // Assert
+        assertNotNull(interviewerAvailabilityReturned);
+        assertEquals(interviewerAvailability, interviewerAvailabilityReturned);
+        assertEquals(interviewerAvailabilityReturned.getInterviewerModel(), interviewerAvailability.getInterviewerModel());
+    }
+
+    @Test
+    public void deleteInterviewerAvailabilityByNameSuccessfully() {
+        // Arrange
+        String interviewerName = "John Doe";
+        InterviewerModel interviewer = InterviewerModel.Builder.interviewerModelWith().withName(interviewerName)
+                                                               .build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        InterviewerAvailabilityModel interviewerAvailability =
+                InterviewerAvailabilityModel.Builder.interviewerAvailabilityModelWith()
+                                                    .withInterviewerModel(interviewer)
+                                                    .withAvailabilitySlotList(availabilitySlots)
+                                                    .build();
+
+
+        // Act
+        when(interviewerAvailabilityRepository.getInterviewerAvailabilityByInterviewerName(interviewerName)).thenReturn(
+                interviewerAvailability);
+
+         interviewerServiceImpl.deleteInterviewerAvailabilityByName(interviewerName);
+
+        // Assert
+        verify(interviewerAvailabilityRepository, times(1)).deleteById(any());
     }
 }

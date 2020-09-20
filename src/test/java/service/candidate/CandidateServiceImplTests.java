@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateServiceImplTests {
@@ -112,6 +112,53 @@ public class CandidateServiceImplTests {
         }
 
         fail("Business exception of candidate with existing name was not thrown!");
+    }
+
+    @Test
+    public void getAllCandidatesSuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+        CandidateModel candidate = CandidateModel.Builder.candidateModelWith().withName(candidateName).build();
+        List<CandidateModel> candidatesToBeReturned = Collections.singletonList(candidate);
+
+        // Act
+        when(candidateRepository.findAll()).thenReturn(candidatesToBeReturned);
+
+        List<CandidateModel> candidatesReturned = candidateServiceImpl.getAllCandidates();
+
+        // Assert
+        assertNotNull(candidatesReturned);
+        assertEquals(candidatesToBeReturned.size(), candidatesReturned.size());
+        assertEquals(candidatesToBeReturned, candidatesReturned);
+    }
+
+    @Test
+    public void getCandidateByNameSuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+        CandidateModel candidate = CandidateModel.Builder.candidateModelWith().withName(candidateName).build();
+
+        // Act
+        when(candidateRepository.findById(candidateName)).thenReturn(Optional.of(candidate));
+
+        Optional<CandidateModel> candidateReturned = candidateServiceImpl.getCandidateByName(candidateName);
+
+        // Assert
+        assertNotNull(candidateReturned);
+        assertEquals(candidateName, candidateReturned.get().getName());
+        assertEquals(candidate, candidateReturned.get());
+    }
+
+    @Test
+    public void deleteCandidateByNameSuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+
+        // Act
+        candidateServiceImpl.deleteCandidateByName(candidateName);
+
+        // Assert
+        verify(candidateRepository, times(1)).deleteById(candidateName);
     }
 
     @Test
@@ -455,5 +502,104 @@ public class CandidateServiceImplTests {
         }
 
         fail("Business exception of invalid to was not thrown!");
+    }
+
+    @Test
+    public void getAllCandidatesAvailabilitySuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+        CandidateModel candidate = CandidateModel.Builder.candidateModelWith().withName(candidateName).build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        CandidateAvailabilityModel candidateAvailability =
+                CandidateAvailabilityModel.Builder.candidateAvailabilityModelWith()
+                                                  .withCandidateModel(candidate)
+                                                  .withAvailabilitySlotList(availabilitySlots)
+                                                  .build();
+
+        List<CandidateAvailabilityModel> candidatesAvailabilitiesToBeReturned = Collections.singletonList(
+                candidateAvailability);
+
+        // Act
+        when(candidateAvailabilityRepository.findAll()).thenReturn(candidatesAvailabilitiesToBeReturned);
+
+        List<CandidateAvailabilityModel> candidatesAvailabilitiesReturned =
+                candidateServiceImpl.getAllCandidatesAvailability();
+
+        // Assert
+        assertNotNull(candidatesAvailabilitiesReturned);
+        assertEquals(candidatesAvailabilitiesToBeReturned.size(), candidatesAvailabilitiesReturned.size());
+        assertEquals(candidatesAvailabilitiesToBeReturned, candidatesAvailabilitiesReturned);
+    }
+
+    @Test
+    public void getCandidateAvailabilityByNameSuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+        CandidateModel candidate = CandidateModel.Builder.candidateModelWith().withName(candidateName).build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        CandidateAvailabilityModel candidateAvailability =
+                CandidateAvailabilityModel.Builder.candidateAvailabilityModelWith()
+                                                  .withCandidateModel(candidate)
+                                                  .withAvailabilitySlotList(availabilitySlots)
+                                                  .build();
+
+
+        // Act
+        when(candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(candidateName)).thenReturn(
+                candidateAvailability);
+
+
+        CandidateAvailabilityModel candidateAvailabilityReturned = candidateServiceImpl.getCandidateAvailabilityByName(
+                candidateName);
+
+        // Assert
+        assertNotNull(candidateAvailabilityReturned);
+        assertEquals(candidateAvailability, candidateAvailabilityReturned);
+        assertEquals(candidateAvailability.getCandidateModel(), candidateAvailabilityReturned.getCandidateModel());
+    }
+
+    @Test
+    public void deleteCandidateAvailabilityByNameSuccessfully() {
+        // Arrange
+        String candidateName = "John Doe";
+        CandidateModel candidate = CandidateModel.Builder.candidateModelWith().withName(candidateName).build();
+
+        TimeSlot timeSlot = TimeSlot.Builder.timeSlotWith().withFrom(LocalTime.of(9, 0)).withTo(LocalTime.of(11, 0))
+                                            .build();
+        List<TimeSlot> timeSlots = Collections.singletonList(timeSlot);
+
+        AvailabilitySlot availabilitySlot = AvailabilitySlot.Builder.availabilitySlotWith().withDay(
+                LocalDate.of(2014, Month.JANUARY, 1)).withTimeSlotList(timeSlots).build();
+        List<AvailabilitySlot> availabilitySlots = Collections.singletonList(availabilitySlot);
+
+        CandidateAvailabilityModel candidateAvailability =
+                CandidateAvailabilityModel.Builder.candidateAvailabilityModelWith()
+                                                  .withCandidateModel(candidate)
+                                                  .withAvailabilitySlotList(availabilitySlots)
+                                                  .build();
+
+        // Act
+        when(candidateAvailabilityRepository.getCandidateAvailabilityByCandidateName(candidateName)).thenReturn(candidateAvailability);
+
+        candidateServiceImpl.deleteCandidateAvailabilityByName(candidateName);
+
+        // Assert
+        verify(candidateAvailabilityRepository, times(1)).deleteById(any());
     }
 }
