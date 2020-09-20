@@ -479,7 +479,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"interviewersList\": \n        [\n            {\n                \"name\": \"Jane Doe\"\n            },\n            {\n                \"name\": \"John Smith\"\n            }\n        ],\n    \"candidate\": \"John Doe\"\n}",
+							"raw": "{\n    \"candidateName\": \"John Doe\",\n    \"interviewersNames\": \n        [\n            \"Jane Doe\",\n            \"John Smith\"\n        ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
