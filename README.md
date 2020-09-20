@@ -1,6 +1,6 @@
 # Tamanna Tech Challenge
 
-This application is an interview calendar API. 
+This application is an interview calendar API. It implements endpoints to create candidates and interviewers, to create their availability slots, query for common availability slots between candidate and interviewers, among others.
 
 **Notes:**
 
