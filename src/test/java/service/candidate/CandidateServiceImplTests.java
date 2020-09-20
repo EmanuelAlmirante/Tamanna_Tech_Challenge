@@ -460,7 +460,7 @@ public class CandidateServiceImplTests {
             candidateServiceImpl.createCandidateAvailability(candidateAvailability);
         } catch (BusinessException be) {
             String exceptionMessage =
-                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour!";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }
@@ -496,7 +496,7 @@ public class CandidateServiceImplTests {
             candidateServiceImpl.createCandidateAvailability(candidateAvailability);
         } catch (BusinessException be) {
             String exceptionMessage =
-                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour!";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }

@@ -474,7 +474,7 @@ public class InterviewerServiceImplTests {
             interviewerServiceImpl.createInterviewerAvailability(interviewerAvailability);
         } catch (BusinessException be) {
             String exceptionMessage =
-                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour!";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }
@@ -511,7 +511,7 @@ public class InterviewerServiceImplTests {
             interviewerServiceImpl.createInterviewerAvailability(interviewerAvailability);
         } catch (BusinessException be) {
             String exceptionMessage =
-                    "Availability slot must be from the beginning of the hour until the beginning of the next hour.";
+                    "Availability slot must be from the beginning of the hour until the beginning of the next hour!";
             assertEquals(exceptionMessage, be.getMessage());
             throw be;
         }

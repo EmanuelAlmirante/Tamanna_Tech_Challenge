@@ -142,7 +142,7 @@ public class CandidateServiceImpl implements CandidateService {
                 if (newTimeSlotFromTime.getMinute() != 0 || newTimeSlotToTime.getMinute() != 0) {
                     throw new BusinessException(
                             "Availability slot must be from the beginning of the hour until the beginning of the next"
-                            + " hour.",
+                            + " hour!",
                             "From: " + newTimeSlotFromTime, "To: " + newTimeSlotToTime);
                 }
             }
