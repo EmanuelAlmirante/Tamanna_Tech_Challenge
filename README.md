@@ -4,15 +4,13 @@ This application is an interview calendar API. It implements endpoints to create
 
 **Notes:**
 
-There can be no two candidates with the same name. The same is applied to the interviewers. But there can be a candidate and an interviewer with the same name.
+There can be no two candidates with the same name. The same is applied to the interviewers. But there can be a candidate and an interviewer with the same name. It is always necessary to have a candidate/interviewer created to be able to crete their availability.
 
-It is always necessary to have a candidate/interviewer created to be able to crete their availability.
-
-It is possible to get all candidates/interviewers that exist or get a specific candidate/interviewer by querying by their name. It is also possible to delete a candidate/interviewer by passing their name as a parameter.
+It is possible to get all candidates/interviewers that exist or get a specific candidate/interviewer by querying by their name. It is also possible to delete a candidate/interviewer by passing their name as a parameter. Note that if a candidate/interviewer is deleted then it's availability will also be deleted.
 
 It is also possible to get all candidates/interviewers availabilities that exist or get get a specific candidate/interviewer availabilities by querying by their name. As before, it is also possible to delete a candidate/interviewer availability by passing their name as a parameter (this will delete all availabilities of a candidate/interviewer and not only a specific one/a specific time slot).
 
-Regarding the tests, I decided to only implement unit tests and not integration tests due to the fact that the application does not need to be production ready. For the same reason, I did not implement an extensive battery of unitary tests, and only covered the main functionalities of the application.
+Regarding the tests, I decided to only implement unit tests and not integration tests due to the fact that the application does not need to be production ready. 
 
 
 ### Necessary Tools:
